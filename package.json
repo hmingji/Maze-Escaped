@@ -1,0 +1,23 @@
+{
+  "name": "websocketgame",
+  "version": "1.0.0",
+  "description": "building a game for fun",
+  "default": "client/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmingji/websocketgame.git"
+  },
+  "author": "mingji",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hmingji/websocketgame/issues"
+  },
+  "homepage": "https://github.com/hmingji/websocketgame#readme",
+  "devDependencies": {
+    "parcel": "^2.8.0",
+    "typescript": "^4.8.4"
+  }
+}
