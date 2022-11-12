@@ -1,1 +1,2 @@
 - to add eslint
+- add express and host the static file

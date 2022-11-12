@@ -1,1 +1,3 @@
-console.log("hello world from index.ts");
+import { startServer } from "./httpController";
+
+const server = startServer();
