@@ -1,3 +1,5 @@
+import random from 'random-name';
+
 export let players: TPlayer[] = [];
 
 export const removePlayer = (id: number) => {
@@ -10,7 +12,7 @@ export function createPlayer(id: number) {
     y: 100,
     v: 0,
     score: 0,
-    name: 'temp',
+    name: random.first(),
     id,
     color: `#${Math.floor(Math.random() * (0xffffff + 1)).toString(16)}`,
     facing: 'Right',
