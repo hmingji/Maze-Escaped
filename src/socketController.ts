@@ -1,6 +1,7 @@
 import { Server, Socket } from 'socket.io';
 import { LIMIT_IP } from './constants';
-import { createPlayer } from './gameController';
+import { createPlayer, getPlayers, removePlayer } from './gameController';
+import { isEmpty, pickBy, identity } from 'lodash';
 
 let io: Server;
 let nextPlayerId = 0;
@@ -12,6 +13,36 @@ let lastPlayerStates: any[] = [];
 
 export function getNextPlayerId() {
   return nextPlayerId++;
+}
+
+export function emitPlayers(players: TPlayer[]) {
+  const diffs: any[] = [];
+  for (let player of players) {
+    const lastPlayerState = lastPlayerStates.find((p) => p.id === player.id);
+    if (!lastPlayerState) {
+      diffs.push(player);
+    } else {
+      let diff = {
+        x: player.x !== lastPlayerState.x ? player.x : undefined,
+        y: player.y !== lastPlayerState.y ? player.y : undefined,
+        name: player.name !== lastPlayerState.name ? player.name : undefined,
+        state:
+          player.state !== lastPlayerState.state ? player.state : undefined,
+        facing:
+          player.facing !== lastPlayerState.facing ? player.facing : undefined,
+      };
+      diff = pickBy(diff, (value) => value !== undefined);
+
+      if (!isEmpty(diff)) {
+        (diff as any).id = player.id;
+        diffs.push(diff);
+      }
+    }
+  }
+  if (!isEmpty(diffs)) {
+    io.emit('p', diffs);
+  }
+  lastPlayerStates = players.map((p) => ({ ...p }));
 }
 
 export const startSocketController = (server) => {
@@ -42,6 +73,7 @@ export const startSocketController = (server) => {
     socketMap[socket.id] = socket;
 
     socket.emit('id', newPlayerId);
+    socket.emit('p', getPlayers());
 
     socket.on('disconnect', () => {
       console.log('a user disconnected');
@@ -49,6 +81,7 @@ export const startSocketController = (server) => {
       const playerId = playerIdMap[socket.id];
       delete playerMap[socket.id];
       delete playerIdMap[socket.id];
+      removePlayer(playerId);
 
       io.emit('playerLeft', playerId);
     });

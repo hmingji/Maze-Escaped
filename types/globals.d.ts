@@ -1,3 +1,5 @@
+declare module '*.png';
+
 type PlayerState = 'Normal' | 'Stunned' | 'Dead';
 
 type GhostState = 'Normal' | 'Stunned';
