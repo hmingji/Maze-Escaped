@@ -1,6 +1,7 @@
 export const PORT = process.env.PORT || 3000;
 export const LIMIT_IP = process.env.ENABLE_IP_LIMIT ? true : false;
 export const TICK_RATE = 30;
+export const PLAYER_SPEED = 0.5;
 
 export enum CONTROLS {
   UP = 'up',

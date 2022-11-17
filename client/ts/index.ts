@@ -1,6 +1,10 @@
+import { TICK_RATE } from '../../src/constants';
 import { ctx, setupCanvas } from './canvas';
-import { drawPlayers } from './player';
+import { INTERPOLATION_RATE } from './constants';
+import { activeControls, defaultKeymap, setKeymap } from './controls';
+import { drawPlayers, updatePlayers } from './player';
 import './socket';
+import { emitControls } from './socket';
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -21,7 +25,20 @@ function loop(timestamp) {
 }
 
 function startup() {
+  setKeymap(defaultKeymap);
   window.requestAnimationFrame(loop);
 }
+
+setInterval(() => {
+  emitControls(activeControls);
+}, 1000 / TICK_RATE);
+
+let lastInterpolationTime = performance.now();
+setInterval(() => {
+  const now = performance.now();
+  const delta = now - lastInterpolationTime;
+  updatePlayers(delta);
+  lastInterpolationTime = now;
+}, 1000 / INTERPOLATION_RATE);
 
 startup();

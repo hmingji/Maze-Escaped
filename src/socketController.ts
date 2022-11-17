@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { LIMIT_IP } from './constants';
+import { CONTROLS, LIMIT_IP, TControlMap } from './constants';
 import { createPlayer, getPlayers, removePlayer } from './gameController';
 import { isEmpty, pickBy, identity } from 'lodash';
 
@@ -9,10 +9,25 @@ const ipSet = new Set<string>();
 const playerIdMap: Record<string, number> = {};
 const playerMap: Record<string, TPlayer> = {};
 const socketMap: Record<string, Socket> = {};
+const controlsMap: Record<number, TControlMap> = {};
 let lastPlayerStates: any[] = [];
 
 export function getNextPlayerId() {
   return nextPlayerId++;
+}
+
+export function getControlsForPlayer(playerId: number) {
+  if (!controlsMap[playerId]) {
+    controlsMap[playerId] = {
+      up: false,
+      down: false,
+      left: false,
+      right: false,
+      shoot: false,
+      reload: false,
+    };
+  }
+  return controlsMap[playerId];
 }
 
 export function emitPlayers(players: TPlayer[]) {
@@ -84,6 +99,31 @@ export const startSocketController = (server) => {
       removePlayer(playerId);
 
       io.emit('playerLeft', playerId);
+    });
+
+    socket.on('shoot', () => {
+      const controlMap = getControlsForPlayer(playerIdMap[socket.id]);
+      controlMap[CONTROLS.SHOOT] = true;
+    });
+
+    socket.on('reload', () => {
+      const controlMap = getControlsForPlayer(playerIdMap[socket.id]);
+      controlMap[CONTROLS.RELOAD] = true;
+    });
+
+    socket.on('c', (controls: number) => {
+      const LEFT_BIT = 1 << 0;
+      const RIGHT_BIT = 1 << 1;
+      const UP_BIT = 1 << 2;
+      const DOWN_BIT = 1 << 3;
+      const newControls = {
+        left: controls & LEFT_BIT,
+        right: controls & RIGHT_BIT,
+        up: controls & UP_BIT,
+        down: controls & DOWN_BIT,
+      };
+
+      Object.assign(getControlsForPlayer(playerIdMap[socket.id]), newControls);
     });
   });
 };

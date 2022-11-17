@@ -1,4 +1,7 @@
 import random from 'random-name';
+import { TICK_RATE } from './constants';
+import { handleGameMotion } from './motionController';
+import { emitPlayers } from './socketController';
 
 export let players: TPlayer[] = [];
 
@@ -27,3 +30,24 @@ export function createPlayer(id: number) {
 export function getPlayers() {
   return players;
 }
+
+function getProcessMs() {
+  const hrTime = process.hrtime();
+  return (hrTime[0] * 1e9 + hrTime[1]) / 1e6;
+}
+
+function tick(delta: number) {
+  handleGameMotion(players, delta);
+  emitPlayers(players);
+}
+
+let lastUpdate = getProcessMs();
+let tickNumber = 0;
+
+setInterval(() => {
+  const now = getProcessMs();
+  const delta = now - lastUpdate;
+  tick(delta);
+  lastUpdate = now;
+  tickNumber++;
+}, 1000 / TICK_RATE);
