@@ -2,6 +2,7 @@ import { TICK_RATE } from '../../src/constants';
 import { ctx, setupCanvas } from './canvas';
 import { INTERPOLATION_RATE } from './constants';
 import { activeControls, defaultKeymap, setKeymap } from './controls';
+import { drawMap } from './map';
 import { drawPlayers, updatePlayers } from './player';
 import './socket';
 import { emitControls } from './socket';
@@ -14,6 +15,7 @@ let lastRender = 0;
 
 function draw() {
   ctx.clearRect(0, 0, width, height);
+  drawMap(ctx);
   drawPlayers(ctx);
 }
 

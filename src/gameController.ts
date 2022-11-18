@@ -1,5 +1,6 @@
 import random from 'random-name';
 import { TICK_RATE } from './constants';
+import { loadMap } from './mapController';
 import { handleGameMotion } from './motionController';
 import { emitPlayers } from './socketController';
 
@@ -43,6 +44,8 @@ function tick(delta: number) {
 
 let lastUpdate = getProcessMs();
 let tickNumber = 0;
+
+loadMap('default');
 
 setInterval(() => {
   const now = getProcessMs();

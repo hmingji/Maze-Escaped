@@ -2,6 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { CONTROLS, LIMIT_IP, TControlMap } from './constants';
 import { createPlayer, getPlayers, removePlayer } from './gameController';
 import { isEmpty, pickBy, identity } from 'lodash';
+import { getGameMap } from './mapController';
 
 let io: Server;
 let nextPlayerId = 0;
@@ -89,6 +90,7 @@ export const startSocketController = (server) => {
 
     socket.emit('id', newPlayerId);
     socket.emit('p', getPlayers());
+    socket.emit('map', getGameMap());
 
     socket.on('disconnect', () => {
       console.log('a user disconnected');

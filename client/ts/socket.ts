@@ -1,5 +1,6 @@
 import { io } from 'socket.io-client';
 import { CTR_ACTIONS } from './controls';
+import { setMap } from './map';
 import { refreshPlayersState } from './player';
 
 const socket = io(process.env.WS_SERVER ?? 'ws://localhost:3000');
@@ -16,6 +17,10 @@ socket.on('id', (playerId: number) => {
 
 socket.on('p', (serverPlayers) => {
   refreshPlayersState(serverPlayers);
+});
+
+socket.on('map', (serverMap: number[][]) => {
+  setMap(serverMap);
 });
 
 export function getMyPlayerId() {
