@@ -1,4 +1,5 @@
 import brickwallUrl from '../images/brickWall.png';
+import { Camera } from './camera';
 import { TILE_SIZE } from './constants';
 
 let map: number[][] | null = null;
@@ -10,7 +11,7 @@ export function setMap(newMap: number[][]) {
   map = newMap;
 }
 
-export function drawMap(ctx: CanvasRenderingContext2D) {
+export function drawMap(ctx: CanvasRenderingContext2D, camera: Camera) {
   if (!map) return;
 
   for (let row = 0; row < map.length; row++) {
@@ -19,8 +20,12 @@ export function drawMap(ctx: CanvasRenderingContext2D) {
       if (tileType === 1) {
         ctx.drawImage(
           mapImage,
-          col * TILE_SIZE,
-          row * TILE_SIZE,
+          0,
+          0,
+          TILE_SIZE,
+          TILE_SIZE,
+          Math.floor(col * TILE_SIZE - camera.cx),
+          Math.floor(row * TILE_SIZE - camera.cy),
           TILE_SIZE,
           TILE_SIZE
         );

@@ -1,4 +1,5 @@
 import { TICK_RATE } from '../../src/constants';
+import { getCamera } from './camera';
 import { ctx, setupCanvas } from './canvas';
 import { INTERPOLATION_RATE } from './constants';
 import { activeControls, defaultKeymap, setKeymap } from './controls';
@@ -15,8 +16,9 @@ let lastRender = 0;
 
 function draw() {
   ctx.clearRect(0, 0, width, height);
-  drawMap(ctx);
-  drawPlayers(ctx);
+  const camera = getCamera();
+  drawMap(ctx, camera);
+  drawPlayers(ctx, camera);
 }
 
 function loop(timestamp) {

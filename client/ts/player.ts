@@ -5,6 +5,7 @@ import playerFUrl from '../images/player_front.png';
 import { PLAYER_HEIGHT, PLAYER_WIDTH } from './constants';
 import { getMyPlayerId } from './socket';
 import { TICK_RATE } from '../../src/constants';
+import { Camera } from './camera';
 
 let players: TPlayer[] = [];
 
@@ -48,27 +49,35 @@ export function getInterpolations() {
   return interpolations;
 }
 
-function drawPlayer(ctx: CanvasRenderingContext2D, player: TPlayer) {
+function drawPlayer(
+  ctx: CanvasRenderingContext2D,
+  player: TPlayer,
+  camera: Camera
+) {
   ctx.drawImage(
     playerImageMap[player.facing],
     0,
     0,
     PLAYER_WIDTH,
     PLAYER_HEIGHT,
-    player.x,
-    player.y,
+    player.x - camera.cx,
+    player.y - camera.cy,
     PLAYER_WIDTH,
     PLAYER_HEIGHT
   );
 }
 
-export function drawPlayers(ctx: CanvasRenderingContext2D) {
+export function drawPlayers(ctx: CanvasRenderingContext2D, camera: Camera) {
   for (let player of players) {
-    drawPlayer(ctx, player);
+    drawPlayer(ctx, player, camera);
     ctx.fillStyle = '#00FF00';
     ctx.font = `16px Verdana`;
     ctx.textAlign = 'center';
-    ctx.fillText(player.name, player.x + 15, player.y - 10);
+    ctx.fillText(
+      player.name,
+      player.x + 15 - camera.cx,
+      player.y - 10 - camera.cy
+    );
   }
 }
 
