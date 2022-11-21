@@ -24,8 +24,8 @@ export function loadMap(mapName) {
 }
 
 const PLAYER_SPAWN: TPoint = {
-  x: 100,
-  y: 100,
+  x: 50,
+  y: 50,
 };
 
 const GHOST_SPAWN: TPoint = {
