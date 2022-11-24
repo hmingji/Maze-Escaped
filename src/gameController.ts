@@ -5,6 +5,7 @@ import { handleGameMotion } from './motionController';
 import { emitPlayers } from './socketController';
 
 export let players: TPlayer[] = [];
+export let bullets: TBullet[] = [];
 
 export const removePlayer = (id: number) => {
   players = players.filter((player) => player.id !== id);
@@ -28,8 +29,22 @@ export function createPlayer(id: number) {
   return player;
 }
 
+export function fireBullet(x: number, y: number, fireDirection: Direction) {
+  const bullet: TBullet = {
+    x,
+    y,
+    travelTo: fireDirection,
+  };
+  bullets.push(bullet);
+  return bullet;
+}
+
 export function getPlayers() {
   return players;
+}
+
+export function getBullets() {
+  return bullets;
 }
 
 function getProcessMs() {
@@ -38,7 +53,7 @@ function getProcessMs() {
 }
 
 function tick(delta: number) {
-  handleGameMotion(players, delta);
+  handleGameMotion(players, bullets, delta);
   emitPlayers(players);
 }
 

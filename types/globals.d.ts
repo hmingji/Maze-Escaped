@@ -22,6 +22,12 @@ type TPlayer = {
   gunState: GunState;
 };
 
+type TBullet = {
+  x: number;
+  y: number;
+  travelTo: Direction;
+};
+
 type TGhost = {
   id: number;
   x: number;
