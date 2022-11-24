@@ -3,8 +3,8 @@ export const LIMIT_IP = process.env.ENABLE_IP_LIMIT ? true : false;
 export const TICK_RATE = 30;
 export const PLAYER_SPEED = 0.5;
 export const PLAYER_WIDTH = 32;
-export const PLAYER_HEIGHT = 32;
-export const TILE_SIZE = 48;
+export const PLAYER_HEIGHT = 48;
+export const TILE_SIZE = 60;
 
 export enum CONTROLS {
   UP = 'up',

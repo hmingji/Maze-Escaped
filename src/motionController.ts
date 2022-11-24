@@ -1,5 +1,5 @@
 import { CONTROLS, PLAYER_SPEED } from './constants';
-import { isCollidingWithMap } from './geom';
+import { getOffset, isCollidingWithMap } from './geom';
 import { getCollidables } from './mapController';
 import { getControlsForPlayer } from './socketController';
 
@@ -11,29 +11,29 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
     player.x += speed * delta;
     player.facing = 'Right';
 
-    if (isCollidingWithMap(player, getCollidables())) {
-      player.x -= speed * delta;
+    if (isCollidingWithMap(player, getCollidables(), 'Right')) {
+      player.x -= getOffset().x;
     }
   } else if (playerControls[CONTROLS.LEFT]) {
     player.x -= speed * delta;
     player.facing = 'Left';
 
-    if (isCollidingWithMap(player, getCollidables())) {
-      player.x += speed * delta;
+    if (isCollidingWithMap(player, getCollidables(), 'Left')) {
+      player.x += getOffset().x;
     }
   } else if (playerControls[CONTROLS.UP]) {
     player.y -= speed * delta;
     player.facing = 'Up';
 
-    if (isCollidingWithMap(player, getCollidables())) {
-      player.y += speed * delta;
+    if (isCollidingWithMap(player, getCollidables(), 'Up')) {
+      player.y += getOffset().y;
     }
   } else if (playerControls[CONTROLS.DOWN]) {
     player.y += speed * delta;
     player.facing = 'Down';
 
-    if (isCollidingWithMap(player, getCollidables())) {
-      player.y -= speed * delta;
+    if (isCollidingWithMap(player, getCollidables(), 'Down')) {
+      player.y -= getOffset().y;
     }
   }
 }

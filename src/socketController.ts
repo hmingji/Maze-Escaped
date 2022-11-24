@@ -57,6 +57,7 @@ export function emitPlayers(players: TPlayer[]) {
   }
   if (!isEmpty(diffs)) {
     io.emit('p', diffs);
+    //console.log(getPlayers());
   }
   lastPlayerStates = players.map((p) => ({ ...p }));
 }

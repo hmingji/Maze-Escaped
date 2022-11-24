@@ -12,8 +12,8 @@ export const removePlayer = (id: number) => {
 
 export function createPlayer(id: number) {
   const player: TPlayer = {
-    x: 50,
-    y: 50,
+    x: 70,
+    y: 70,
     v: 0,
     score: 0,
     name: random.first(),
