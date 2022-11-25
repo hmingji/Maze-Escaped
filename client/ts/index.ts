@@ -1,4 +1,5 @@
 import { TICK_RATE } from '../../src/constants';
+import { drawBullets } from './bullet';
 import { getCamera } from './camera';
 import { ctx, setupCanvas } from './canvas';
 import { INTERPOLATION_RATE } from './constants';
@@ -19,6 +20,7 @@ function draw() {
   const camera = getCamera();
   drawMap(ctx, camera);
   drawPlayers(ctx, camera);
+  drawBullets(ctx, camera);
 }
 
 function loop(timestamp) {

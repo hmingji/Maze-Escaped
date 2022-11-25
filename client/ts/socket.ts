@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { updateBullets } from './bullet';
 import { CTR_ACTIONS } from './controls';
 import { setMap } from './map';
 import { refreshPlayersState } from './player';
@@ -17,6 +18,11 @@ socket.on('id', (playerId: number) => {
 
 socket.on('p', (serverPlayers) => {
   refreshPlayersState(serverPlayers);
+});
+
+socket.on('bullets', (serverBullets) => {
+  //console.log(serverBullets);
+  updateBullets(serverBullets);
 });
 
 socket.on('map', (serverMap: number[][]) => {
@@ -41,5 +47,9 @@ export function emitControls(activeControls) {
   if (controlByte !== lastSentControls) {
     socket.emit('c', controlByte);
     lastSentControls = controlByte;
+  }
+
+  if (activeControls[CTR_ACTIONS.SHOOT]) {
+    socket.emit('shoot', null);
   }
 }

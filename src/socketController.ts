@@ -62,6 +62,10 @@ export function emitPlayers(players: TPlayer[]) {
   lastPlayerStates = players.map((p) => ({ ...p }));
 }
 
+export function emitBullets(bullets: TBullet[]) {
+  io.emit('bullets', bullets);
+}
+
 export const startSocketController = (server) => {
   io = new Server(server, {
     cors: {

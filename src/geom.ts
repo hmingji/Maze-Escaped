@@ -100,3 +100,19 @@ export const isCollidingWithBullet = (player, bullets) => {
   }
   return null;
 };
+
+export const isBulletColliding = (bullet, collidables, players) => {
+  for (const collidable of collidables) {
+    if (
+      isOverlap(getBulletBoundingBox(bullet), getMapBoundingBox(collidable))
+    ) {
+      return true;
+    }
+  }
+  for (const player of players) {
+    if (isOverlap(getBulletBoundingBox(bullet), getPlayerBoundingBox(player))) {
+      return true;
+    }
+  }
+  return false;
+};
