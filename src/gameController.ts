@@ -1,8 +1,12 @@
 import random from 'random-name';
 import { TICK_RATE } from './constants';
 import { loadMap } from './mapController';
-import { handleGamePhysics } from './physicsController';
-import { emitBullets, emitPlayers } from './socketController';
+import { canShoot, handleGamePhysics } from './physicsController';
+import {
+  emitBulletRemoved,
+  emitBullets,
+  emitPlayers,
+} from './socketController';
 
 export let players: TPlayer[] = [];
 export let bullets: TBullet[] = [];
@@ -26,11 +30,17 @@ export function createPlayer(id: number) {
     state: 'Normal',
   };
   players.push(player);
+  canShoot[player.id] = true;
   return player;
 }
 
-export function fireBullet(spawnPoint: TPoint, fireDirection: Direction) {
+export function fireBullet(
+  id: number,
+  spawnPoint: TPoint,
+  fireDirection: Direction
+) {
   const bullet: TBullet = {
+    id,
     x: spawnPoint.x,
     y: spawnPoint.y,
     travelTo: fireDirection,
@@ -49,6 +59,7 @@ export function getBullets() {
 
 export function removeBullet(bullet: TBullet) {
   bullets = bullets.filter((item) => item !== bullet);
+  emitBulletRemoved(bullet);
 }
 
 function getProcessMs() {
@@ -59,7 +70,7 @@ function getProcessMs() {
 function tick(delta: number) {
   handleGamePhysics(players, bullets, delta);
   emitPlayers(players);
-  //emitBullets(bullets);
+  emitBullets(bullets);
 }
 
 let lastUpdate = getProcessMs();

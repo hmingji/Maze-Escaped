@@ -9,7 +9,7 @@ import { Camera } from './camera';
 
 let players: TPlayer[] = [];
 
-type TInterpolation = {
+export type TInterpolation = {
   x: number;
   y: number;
   t: number;

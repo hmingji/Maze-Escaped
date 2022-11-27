@@ -14,6 +14,13 @@ import {
 import { getCollidables } from './mapController';
 import { getControlsForPlayer } from './socketController';
 
+let nextBulletId = 0;
+export const canShoot: Record<number, boolean> = {};
+
+function getNextBulletId() {
+  return nextBulletId++;
+}
+
 function handlePlayerMovement(player: TPlayer, delta: number) {
   const playerControls = getControlsForPlayer(player.id);
   const speed = PLAYER_SPEED;
@@ -55,10 +62,20 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
 
 function handlePlayerShoot(player: TPlayer) {
   const playerControls = getControlsForPlayer(player.id);
-  if (playerControls[CONTROLS.SHOOT]) {
-    fireBullet(getBulletSpawn(player), player.facing);
+  if (playerControls[CONTROLS.SHOOT] && canShoot[player.id]) {
+    canShoot[player.id] = false;
+    fireBullet(getNextBulletId(), getBulletSpawn(player), player.facing);
+    activateShoot(player.id);
   }
   playerControls[CONTROLS.SHOOT] = false;
+}
+
+function activateShoot(playerId: number) {
+  if (!canShoot[playerId]) {
+    setTimeout(() => {
+      canShoot[playerId] = true;
+    }, 1000);
+  }
 }
 
 function getBulletSpawn(player: TPlayer) {

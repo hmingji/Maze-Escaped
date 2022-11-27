@@ -23,6 +23,7 @@ type TPlayer = {
 };
 
 type TBullet = {
+  id: number;
   x: number;
   y: number;
   travelTo: Direction;

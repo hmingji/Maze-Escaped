@@ -12,6 +12,7 @@ const playerMap: Record<string, TPlayer> = {};
 const socketMap: Record<string, Socket> = {};
 const controlsMap: Record<number, TControlMap> = {};
 let lastPlayerStates: any[] = [];
+let lastBulletStates: any[] = [];
 
 export function getNextPlayerId() {
   return nextPlayerId++;
@@ -63,7 +64,32 @@ export function emitPlayers(players: TPlayer[]) {
 }
 
 export function emitBullets(bullets: TBullet[]) {
-  io.emit('bullets', bullets);
+  const diffs: any[] = [];
+  for (let bullet of bullets) {
+    const lastBulletState = lastBulletStates.find((b) => b.id === bullet.id);
+    if (!lastBulletState) {
+      diffs.push(bullet);
+    } else {
+      let diff = {
+        x: bullet.x !== lastBulletState.x ? bullet.x : undefined,
+        y: bullet.y !== lastBulletState.y ? bullet.y : undefined,
+      };
+      diff = pickBy(diff, (value) => value !== undefined);
+
+      if (!isEmpty(diff)) {
+        (diff as any).id = bullet.id;
+        diffs.push(diff);
+      }
+    }
+  }
+  if (!isEmpty(diffs)) {
+    io.emit('bullets', diffs);
+  }
+  lastBulletStates = bullets.map((b) => ({ ...b }));
+}
+
+export function emitBulletRemoved(bullet: TBullet) {
+  io.emit('bulletRemoved', bullet);
 }
 
 export const startSocketController = (server) => {

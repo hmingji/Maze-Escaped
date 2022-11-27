@@ -1,5 +1,5 @@
 import { TICK_RATE } from '../../src/constants';
-import { drawBullets } from './bullet';
+import { drawBullets, updateBullets } from './bullet';
 import { getCamera } from './camera';
 import { ctx, setupCanvas } from './canvas';
 import { INTERPOLATION_RATE } from './constants';
@@ -44,6 +44,7 @@ setInterval(() => {
   const now = performance.now();
   const delta = now - lastInterpolationTime;
   updatePlayers(delta);
+  updateBullets(delta);
   lastInterpolationTime = now;
 }, 1000 / INTERPOLATION_RATE);
 
