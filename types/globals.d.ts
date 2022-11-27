@@ -13,7 +13,6 @@ type TPlayer = {
   x: number;
   y: number;
   score: number;
-  v: number;
   color: string;
   name: string;
   state: PlayerState;
@@ -34,7 +33,6 @@ type TGhost = {
   x: number;
   y: number;
   score: number;
-  v: number;
   color: string;
   state: GhostState;
   facing: Direction;

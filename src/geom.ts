@@ -1,5 +1,6 @@
 import {
   BULLET_SIZE,
+  GHOST_SIZE,
   PLAYER_HEIGHT,
   PLAYER_WIDTH,
   TILE_SIZE,
@@ -67,6 +68,11 @@ export const getPlayerBoundingBox = getBoundingRectangleFactory(
   PLAYER_HEIGHT
 );
 
+export const getGhostBoundingBox = getBoundingRectangleFactory(
+  GHOST_SIZE,
+  GHOST_SIZE
+);
+
 export const getMapBoundingBox = getBoundingRectangleFactory(
   TILE_SIZE,
   TILE_SIZE
@@ -77,15 +83,21 @@ export const getBulletBoundingBox = getBoundingRectangleFactory(
   BULLET_SIZE
 );
 
-export const isCollidingWithMap = (player, collidables) => {
+function isPlayer(player: TPlayer | TGhost): player is TPlayer {
+  return (player as TPlayer).bullet !== undefined;
+}
+
+export const isCollidingWithMap = (character, collidables) => {
+  const characterBoundingBox = isPlayer(character)
+    ? getPlayerBoundingBox(character)
+    : getGhostBoundingBox(character);
+
   for (const collidable of collidables) {
-    if (
-      isOverlap(getPlayerBoundingBox(player), getMapBoundingBox(collidable))
-    ) {
+    if (isOverlap(characterBoundingBox, getMapBoundingBox(collidable))) {
       return getOffset(
-        getPlayerBoundingBox(player),
+        characterBoundingBox,
         getMapBoundingBox(collidable),
-        player.facing
+        character.facing
       );
     }
   }

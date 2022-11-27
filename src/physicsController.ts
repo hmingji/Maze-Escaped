@@ -1,6 +1,7 @@
 import {
   BULLET_SPEED,
   CONTROLS,
+  GHOST_SPEED,
   PLAYER_HEIGHT,
   PLAYER_SPEED,
   PLAYER_WIDTH,
@@ -58,6 +59,48 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
       player.y -= offset;
     }
   }
+}
+
+function handleGhostMovement(ghost: TGhost, delta: number) {
+  const speed = GHOST_SPEED;
+
+  if (ghost.facing === 'Right') {
+    ghost.x += speed * delta;
+    const offset = isCollidingWithMap(ghost, getCollidables());
+    if (offset) {
+      ghost.x -= offset;
+      ghost.facing = getRandomDirecton(ghost);
+    }
+  } else if (ghost.facing === 'Left') {
+    ghost.x -= speed * delta;
+    const offset = isCollidingWithMap(ghost, getCollidables());
+    if (offset) {
+      ghost.x += offset;
+      ghost.facing = getRandomDirecton(ghost);
+    }
+  } else if (ghost.facing === 'Up') {
+    ghost.y -= speed * delta;
+    const offset = isCollidingWithMap(ghost, getCollidables());
+    if (offset) {
+      ghost.y += offset;
+      ghost.facing = getRandomDirecton(ghost);
+    }
+  } else if (ghost.facing === 'Down') {
+    ghost.y += speed * delta;
+    const offset = isCollidingWithMap(ghost, getCollidables());
+    if (offset) {
+      ghost.y -= offset;
+      ghost.facing = getRandomDirecton(ghost);
+    }
+  }
+}
+
+function getRandomDirecton(ghost: TGhost) {
+  const directions =
+    ghost.facing === 'Left' || ghost.facing === 'Right'
+      ? ['Up', 'Down']
+      : ['Left', 'Right'];
+  return directions[Math.floor(Math.random() * 2)] as Direction;
 }
 
 function handlePlayerShoot(player: TPlayer) {
@@ -124,6 +167,7 @@ function handleBulletMovement(bullet: TBullet, delta: number) {
 export function handleGamePhysics(
   players: TPlayer[],
   bullets: TBullet[],
+  ghosts: TGhost[],
   delta: number
 ) {
   for (const player of players) {
@@ -139,5 +183,9 @@ export function handleGamePhysics(
     if (isBulletColliding(bullet, getCollidables(), players)) {
       removeBullet(bullet);
     }
+  }
+
+  for (const ghost of ghosts) {
+    handleGhostMovement(ghost, delta);
   }
 }

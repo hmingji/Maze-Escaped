@@ -10,6 +10,7 @@ import {
 
 export let players: TPlayer[] = [];
 export let bullets: TBullet[] = [];
+export let ghosts: TGhost[] = [];
 
 export const removePlayer = (id: number) => {
   players = players.filter((player) => player.id !== id);
@@ -19,7 +20,6 @@ export function createPlayer(id: number) {
   const player: TPlayer = {
     x: 70,
     y: 70,
-    v: 0,
     score: 0,
     name: random.first(),
     id,
@@ -32,6 +32,26 @@ export function createPlayer(id: number) {
   players.push(player);
   canShoot[player.id] = true;
   return player;
+}
+
+export function createGhost(id: number) {
+  const ghost: TGhost = {
+    id,
+    x: 100,
+    y: 100,
+    score: 0,
+    color: `#${Math.floor(Math.random() * (0xffffff + 1)).toString(16)}`,
+    facing: 'Right',
+    state: 'Normal',
+  };
+  ghosts.push(ghost);
+  return ghost;
+}
+
+export function spawnGhosts(quantity: number) {
+  for (let i = 0; i < quantity; i++) {
+    createGhost(i);
+  }
 }
 
 export function fireBullet(
@@ -68,7 +88,7 @@ function getProcessMs() {
 }
 
 function tick(delta: number) {
-  handleGamePhysics(players, bullets, delta);
+  handleGamePhysics(players, bullets, ghosts, delta);
   emitPlayers(players);
   emitBullets(bullets);
 }
@@ -77,6 +97,7 @@ let lastUpdate = getProcessMs();
 let tickNumber = 0;
 
 loadMap('default');
+spawnGhosts(5);
 
 setInterval(() => {
   const now = getProcessMs();
