@@ -11,6 +11,8 @@ import {
   isCollidingWithMap,
   isCollidingWithBullet,
   isBulletColliding,
+  isPlayer,
+  isChangeDirectionAllowed,
 } from './geom';
 import { getCollidables } from './mapController';
 import { getControlsForPlayer } from './socketController';
@@ -27,7 +29,7 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
   const speed = PLAYER_SPEED;
 
   if (playerControls[CONTROLS.RIGHT]) {
-    player.x += speed * delta;
+    player.x += Math.trunc(speed * delta);
     player.facing = 'Right';
 
     const offset = isCollidingWithMap(player, getCollidables());
@@ -35,7 +37,7 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
       player.x -= offset;
     }
   } else if (playerControls[CONTROLS.LEFT]) {
-    player.x -= speed * delta;
+    player.x -= Math.trunc(speed * delta);
     player.facing = 'Left';
 
     const offset = isCollidingWithMap(player, getCollidables());
@@ -43,7 +45,7 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
       player.x += offset;
     }
   } else if (playerControls[CONTROLS.UP]) {
-    player.y -= speed * delta;
+    player.y -= Math.trunc(speed * delta);
     player.facing = 'Up';
 
     const offset = isCollidingWithMap(player, getCollidables());
@@ -51,7 +53,7 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
       player.y += offset;
     }
   } else if (playerControls[CONTROLS.DOWN]) {
-    player.y += speed * delta;
+    player.y += Math.trunc(speed * delta);
     player.facing = 'Down';
 
     const offset = isCollidingWithMap(player, getCollidables());
@@ -63,35 +65,84 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
 
 function handleGhostMovement(ghost: TGhost, delta: number) {
   const speed = GHOST_SPEED;
-
+  //console.log('in handle movement function, facing: ', ghost.facing);
   if (ghost.facing === 'Right') {
-    ghost.x += speed * delta;
+    ghost.x += Math.trunc(speed * delta);
     const offset = isCollidingWithMap(ghost, getCollidables());
+    //console.log('ghost offset: ', offset);
     if (offset) {
       ghost.x -= offset;
       ghost.facing = getRandomDirecton(ghost);
+      return;
     }
+    const directionToChange = isChangeDirectionAllowed(ghost, getCollidables());
+    if (directionToChange) {
+      directionToChange.push(ghost.facing);
+      if (directionToChange.length === 2) {
+        ghost.facing = directionToChange[Math.floor(Math.random() * 2)];
+      } else {
+        ghost.facing = directionToChange[Math.floor(Math.random() * 3)];
+      }
+    }
+
+    return;
   } else if (ghost.facing === 'Left') {
-    ghost.x -= speed * delta;
+    ghost.x -= Math.trunc(speed * delta);
     const offset = isCollidingWithMap(ghost, getCollidables());
+    //console.log('ghost offset: ', offset);
     if (offset) {
       ghost.x += offset;
       ghost.facing = getRandomDirecton(ghost);
+      return;
     }
+    const directionToChange = isChangeDirectionAllowed(ghost, getCollidables());
+    if (directionToChange) {
+      directionToChange.push(ghost.facing);
+      if (directionToChange.length === 2) {
+        ghost.facing = directionToChange[Math.floor(Math.random() * 2)];
+      } else {
+        ghost.facing = directionToChange[Math.floor(Math.random() * 3)];
+      }
+    }
+    return;
   } else if (ghost.facing === 'Up') {
-    ghost.y -= speed * delta;
+    ghost.y -= Math.trunc(speed * delta);
     const offset = isCollidingWithMap(ghost, getCollidables());
+    //console.log('ghost offset: ', offset);
     if (offset) {
       ghost.y += offset;
       ghost.facing = getRandomDirecton(ghost);
+      return;
     }
+    const directionToChange = isChangeDirectionAllowed(ghost, getCollidables());
+    if (directionToChange) {
+      directionToChange.push(ghost.facing);
+      if (directionToChange.length === 2) {
+        ghost.facing = directionToChange[Math.floor(Math.random() * 2)];
+      } else {
+        ghost.facing = directionToChange[Math.floor(Math.random() * 3)];
+      }
+    }
+    return;
   } else if (ghost.facing === 'Down') {
-    ghost.y += speed * delta;
+    ghost.y += Math.trunc(speed * delta);
     const offset = isCollidingWithMap(ghost, getCollidables());
+    //console.log('ghost offset: ', offset);
     if (offset) {
       ghost.y -= offset;
       ghost.facing = getRandomDirecton(ghost);
+      return;
     }
+    const directionToChange = isChangeDirectionAllowed(ghost, getCollidables());
+    if (directionToChange) {
+      directionToChange.push(ghost.facing);
+      if (directionToChange.length === 2) {
+        ghost.facing = directionToChange[Math.floor(Math.random() * 2)];
+      } else {
+        ghost.facing = directionToChange[Math.floor(Math.random() * 3)];
+      }
+    }
+    return;
   }
 }
 
@@ -187,5 +238,6 @@ export function handleGamePhysics(
 
   for (const ghost of ghosts) {
     handleGhostMovement(ghost, delta);
+    //console.log('is player: ', isPlayer(ghost));
   }
 }

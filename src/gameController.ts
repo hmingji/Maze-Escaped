@@ -82,6 +82,10 @@ export function getGhosts() {
   return ghosts;
 }
 
+export function clearGhosts() {
+  ghosts = [];
+}
+
 export function removeBullet(bullet: TBullet) {
   bullets = bullets.filter((item) => item !== bullet);
   emitBulletRemoved(bullet);

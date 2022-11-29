@@ -1,5 +1,6 @@
 import {
   BULLET_SIZE,
+  DIRECTION_DETECT_RANGE,
   GHOST_SIZE,
   PLAYER_HEIGHT,
   PLAYER_WIDTH,
@@ -83,7 +84,7 @@ export const getBulletBoundingBox = getBoundingRectangleFactory(
   BULLET_SIZE
 );
 
-function isPlayer(player: TPlayer | TGhost): player is TPlayer {
+export function isPlayer(player: TPlayer | TGhost): player is TPlayer {
   return (player as TPlayer).bullet !== undefined;
 }
 
@@ -101,6 +102,7 @@ export const isCollidingWithMap = (character, collidables) => {
       );
     }
   }
+  //console.log('in isColliding function, facing: ', character.facing);
   return null;
 };
 
@@ -128,3 +130,74 @@ export const isBulletColliding = (bullet, collidables, players) => {
   }
   return false;
 };
+
+export function isChangeDirectionAllowed(ghost: TGhost, collidables: TPoint[]) {
+  const surroundedCollidables = collidables.filter(
+    (c) =>
+      ghost.x - 150 < c.x &&
+      c.x < ghost.x + 150 &&
+      ghost.y - 150 < c.y &&
+      c.y < ghost.y + 150
+  );
+  if (ghost.facing === 'Left' || ghost.facing === 'Right') {
+    const ghostDisplacedUpward: TGhost = {
+      ...ghost,
+      y: ghost.y - DIRECTION_DETECT_RANGE,
+    };
+    const ghostDisplacedDownward: TGhost = {
+      ...ghost,
+      y: ghost.y + DIRECTION_DETECT_RANGE,
+    };
+    let directions: Direction[] = ['Down', 'Up'];
+    for (const collidable of surroundedCollidables) {
+      if (
+        isOverlap(
+          getGhostBoundingBox(ghostDisplacedUpward),
+          getMapBoundingBox(collidable)
+        )
+      ) {
+        directions = directions.filter((item) => item !== 'Up');
+      }
+      if (
+        isOverlap(
+          getGhostBoundingBox(ghostDisplacedDownward),
+          getMapBoundingBox(collidable)
+        )
+      ) {
+        directions = directions.filter((item) => item !== 'Down');
+      }
+    }
+    if (directions.length == 0) return null;
+    return directions;
+  } else if (ghost.facing === 'Up' || ghost.facing === 'Down') {
+    const ghostDisplacedLeft: TGhost = {
+      ...ghost,
+      x: ghost.x - DIRECTION_DETECT_RANGE,
+    };
+    const ghostDisplacedRight: TGhost = {
+      ...ghost,
+      x: ghost.x + DIRECTION_DETECT_RANGE,
+    };
+    let directions: Direction[] = ['Left', 'Right'];
+    for (const collidable of surroundedCollidables) {
+      if (
+        isOverlap(
+          getGhostBoundingBox(ghostDisplacedLeft),
+          getMapBoundingBox(collidable)
+        )
+      ) {
+        directions = directions.filter((item) => item !== 'Left');
+      }
+      if (
+        isOverlap(
+          getGhostBoundingBox(ghostDisplacedRight),
+          getMapBoundingBox(collidable)
+        )
+      ) {
+        directions = directions.filter((item) => item !== 'Right');
+      }
+    }
+    if (directions.length == 0) return null;
+    return directions;
+  }
+}

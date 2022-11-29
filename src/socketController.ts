@@ -6,6 +6,7 @@ import {
   removePlayer,
   spawnGhosts,
   getGhosts,
+  clearGhosts,
 } from './gameController';
 import { isEmpty, pickBy, identity } from 'lodash';
 import { getGameMap } from './mapController';
@@ -170,6 +171,7 @@ export const startSocketController = (server) => {
       removePlayer(playerId);
 
       io.emit('playerLeft', playerId);
+      if (getPlayers().length === 0) clearGhosts();
     });
 
     socket.on('shoot', () => {
