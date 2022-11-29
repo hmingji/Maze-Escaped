@@ -5,6 +5,7 @@ import { canShoot, handleGamePhysics } from './physicsController';
 import {
   emitBulletRemoved,
   emitBullets,
+  emitGhosts,
   emitPlayers,
 } from './socketController';
 
@@ -37,8 +38,8 @@ export function createPlayer(id: number) {
 export function createGhost(id: number) {
   const ghost: TGhost = {
     id,
-    x: 100,
-    y: 100,
+    x: 70,
+    y: 70,
     score: 0,
     color: `#${Math.floor(Math.random() * (0xffffff + 1)).toString(16)}`,
     facing: 'Right',
@@ -77,6 +78,10 @@ export function getBullets() {
   return bullets;
 }
 
+export function getGhosts() {
+  return ghosts;
+}
+
 export function removeBullet(bullet: TBullet) {
   bullets = bullets.filter((item) => item !== bullet);
   emitBulletRemoved(bullet);
@@ -91,13 +96,14 @@ function tick(delta: number) {
   handleGamePhysics(players, bullets, ghosts, delta);
   emitPlayers(players);
   emitBullets(bullets);
+  emitGhosts(ghosts);
+  //console.log(ghosts);
 }
 
 let lastUpdate = getProcessMs();
 let tickNumber = 0;
 
 loadMap('default');
-spawnGhosts(5);
 
 setInterval(() => {
   const now = getProcessMs();

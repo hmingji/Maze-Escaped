@@ -1,4 +1,4 @@
-import { TILE_SIZE } from '../client/ts/constants';
+import { TILE_SIZE } from './constants';
 import { defaultMap } from '../maps/map';
 
 let collidables: TPoint[] = [];

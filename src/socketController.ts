@@ -1,6 +1,12 @@
 import { Server, Socket } from 'socket.io';
 import { CONTROLS, LIMIT_IP, TControlMap } from './constants';
-import { createPlayer, getPlayers, removePlayer } from './gameController';
+import {
+  createPlayer,
+  getPlayers,
+  removePlayer,
+  spawnGhosts,
+  getGhosts,
+} from './gameController';
 import { isEmpty, pickBy, identity } from 'lodash';
 import { getGameMap } from './mapController';
 
@@ -13,6 +19,7 @@ const socketMap: Record<string, Socket> = {};
 const controlsMap: Record<number, TControlMap> = {};
 let lastPlayerStates: any[] = [];
 let lastBulletStates: any[] = [];
+let lastGhostStates: any[] = [];
 
 export function getNextPlayerId() {
   return nextPlayerId++;
@@ -92,6 +99,35 @@ export function emitBulletRemoved(bullet: TBullet) {
   io.emit('bulletRemoved', bullet);
 }
 
+export function emitGhosts(ghosts: TGhost[]) {
+  const diffs: any[] = [];
+  for (let ghost of ghosts) {
+    const lastGhostState = lastGhostStates.find((g) => g.id === ghost.id);
+    if (!lastGhostState) {
+      diffs.push(ghost);
+    } else {
+      let diff = {
+        x: ghost.x !== lastGhostState.x ? ghost.x : undefined,
+        y: ghost.y !== lastGhostState.y ? ghost.y : undefined,
+        state: ghost.state !== lastGhostState.state ? ghost.state : undefined,
+        facing:
+          ghost.facing !== lastGhostState.facing ? ghost.facing : undefined,
+      };
+      diff = pickBy(diff, (value) => value !== undefined);
+
+      if (!isEmpty(diff)) {
+        (diff as any).id = ghost.id;
+        diffs.push(diff);
+      }
+    }
+  }
+  if (!isEmpty(diffs)) {
+    io.emit('ghosts', diffs);
+    //console.log(diffs);
+  }
+  lastGhostStates = ghosts.map((p) => ({ ...p }));
+}
+
 export const startSocketController = (server) => {
   io = new Server(server, {
     cors: {
@@ -122,6 +158,8 @@ export const startSocketController = (server) => {
     socket.emit('id', newPlayerId);
     socket.emit('p', getPlayers());
     socket.emit('map', getGameMap());
+    spawnGhosts(5);
+    socket.emit('ghosts', getGhosts());
 
     socket.on('disconnect', () => {
       console.log('a user disconnected');

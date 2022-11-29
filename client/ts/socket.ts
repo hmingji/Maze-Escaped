@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
-import { refreshBulletsState, removeBullet, updateBullets } from './bullet';
+import { refreshBulletsState, removeBullet } from './bullet';
 import { CTR_ACTIONS } from './controls';
+import { refreshGhostsState } from './ghost';
 import { setMap } from './map';
 import { refreshPlayersState } from './player';
 
@@ -26,6 +27,11 @@ socket.on('bullets', (serverBullets) => {
 
 socket.on('bulletRemoved', (bulletRemoved) => {
   removeBullet(bulletRemoved);
+});
+
+socket.on('ghosts', (serverGhosts) => {
+  console.log(serverGhosts);
+  refreshGhostsState(serverGhosts);
 });
 
 socket.on('map', (serverMap: number[][]) => {

@@ -4,9 +4,10 @@ import { getCamera } from './camera';
 import { ctx, setupCanvas } from './canvas';
 import { INTERPOLATION_RATE } from './constants';
 import { activeControls, defaultKeymap, setKeymap } from './controls';
+import { drawGhosts, updateGhosts } from './ghost';
 import { drawMap } from './map';
 import { drawPlayers, updatePlayers } from './player';
-import './socket';
+//import './socket';
 import { emitControls } from './socket';
 
 const width = window.innerWidth;
@@ -20,6 +21,7 @@ function draw() {
   const camera = getCamera();
   drawMap(ctx, camera);
   drawPlayers(ctx, camera);
+  drawGhosts(ctx, camera);
   drawBullets(ctx, camera);
 }
 
@@ -45,6 +47,7 @@ setInterval(() => {
   const delta = now - lastInterpolationTime;
   updatePlayers(delta);
   updateBullets(delta);
+  updateGhosts(delta);
   lastInterpolationTime = now;
 }, 1000 / INTERPOLATION_RATE);
 

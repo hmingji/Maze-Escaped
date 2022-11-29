@@ -2,7 +2,7 @@ import playerLUrl from '../images/player_left.png';
 import playerRUrl from '../images/player_right.png';
 import playerBUrl from '../images/player_back.png';
 import playerFUrl from '../images/player_front.png';
-import { PLAYER_HEIGHT, PLAYER_WIDTH } from './constants';
+import { PLAYER_HEIGHT, PLAYER_WIDTH } from '../../src/constants';
 import { getMyPlayerId } from './socket';
 import { TICK_RATE } from '../../src/constants';
 import { Camera } from './camera';
