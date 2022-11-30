@@ -1,4 +1,5 @@
 import ghostFUrl from '../images/ghost.png';
+import ghostDUrl from '../images/ghost_dead.png';
 import { TICK_RATE } from '../../src/constants';
 import { Camera } from './camera';
 import { GHOST_SIZE } from './constants';
@@ -10,6 +11,8 @@ const interpolations: Record<number, TInterpolation> = {};
 
 const ghostImageF = new Image();
 ghostImageF.src = ghostFUrl;
+const ghostImageD = new Image();
+ghostImageD.src = ghostDUrl;
 
 const ghostImageMap = {
   Left: ghostImageF,
@@ -25,7 +28,7 @@ function drawGhost(
 ) {
   console.log(ghost.x, ghost.y);
   ctx.drawImage(
-    ghostImageMap[ghost.facing],
+    ghost.state === 'Normal' ? ghostImageMap[ghost.facing] : ghostImageD,
     0,
     0,
     GHOST_SIZE,

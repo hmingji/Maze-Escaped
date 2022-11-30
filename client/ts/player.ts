@@ -2,6 +2,8 @@ import playerLUrl from '../images/player_left.png';
 import playerRUrl from '../images/player_right.png';
 import playerBUrl from '../images/player_back.png';
 import playerFUrl from '../images/player_front.png';
+import playerHLUrl from '../images/player_hurt_left.png';
+import playerHRUrl from '../images/player_hurt_right.png';
 import { PLAYER_HEIGHT, PLAYER_WIDTH } from '../../src/constants';
 import { getMyPlayerId } from './socket';
 import { TICK_RATE } from '../../src/constants';
@@ -25,12 +27,23 @@ const playerImageB = new Image();
 playerImageB.src = playerBUrl;
 const playerImageF = new Image();
 playerImageF.src = playerFUrl;
+const playerImageHL = new Image();
+playerImageHL.src = playerHLUrl;
+const playerImageHR = new Image();
+playerImageHR.src = playerHRUrl;
 
 const playerImageMap = {
   Left: playerImageL,
   Right: playerImageR,
   Up: playerImageB,
   Down: playerImageF,
+};
+
+const playerHurtImageMap = {
+  Left: playerImageHL,
+  Right: playerImageHR,
+  Up: playerImageHL,
+  Down: playerImageHL,
 };
 
 export function removePlayer(playerId: number) {
@@ -55,7 +68,9 @@ function drawPlayer(
   camera: Camera
 ) {
   ctx.drawImage(
-    playerImageMap[player.facing],
+    player.state === 'Normal'
+      ? playerImageMap[player.facing]
+      : playerHurtImageMap[player.facing],
     0,
     0,
     PLAYER_WIDTH,

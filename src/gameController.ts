@@ -1,7 +1,9 @@
 import random from 'random-name';
+import { handleBulletLogic } from './bulletController';
 import { TICK_RATE } from './constants';
+import { handleGhostLogic } from './ghostController';
 import { loadMap } from './mapController';
-import { canShoot, handleGamePhysics } from './physicsController';
+import { canShoot, handleGamePhysics } from './playerController';
 import {
   emitBulletRemoved,
   emitBullets,
@@ -97,7 +99,9 @@ function getProcessMs() {
 }
 
 function tick(delta: number) {
-  handleGamePhysics(players, bullets, ghosts, delta);
+  handleGhostLogic(ghosts, delta);
+  handleGamePhysics(players, delta);
+  handleBulletLogic(bullets, delta);
   emitPlayers(players);
   emitBullets(bullets);
   emitGhosts(ghosts);

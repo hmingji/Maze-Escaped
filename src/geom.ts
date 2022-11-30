@@ -106,9 +106,13 @@ export const isCollidingWithMap = (character, collidables) => {
   return null;
 };
 
-export const isCollidingWithBullet = (player, bullets) => {
+export const isCollidingWithBullet = (character, bullets) => {
+  const characterBoundingBox = isPlayer(character)
+    ? getPlayerBoundingBox(character)
+    : getGhostBoundingBox(character);
+
   for (const bullet of bullets) {
-    if (isOverlap(getPlayerBoundingBox(player), getBulletBoundingBox(bullet))) {
+    if (isOverlap(characterBoundingBox, getBulletBoundingBox(bullet))) {
       return true;
     }
   }
@@ -130,6 +134,35 @@ export const isBulletColliding = (bullet, collidables, players) => {
   }
   return false;
 };
+
+export function isBulletCollidingWithMap(bullet, collidables) {
+  for (const collidable of collidables) {
+    if (
+      isOverlap(getBulletBoundingBox(bullet), getMapBoundingBox(collidable))
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function isBulletCollidingWithPlayers(bullet, players) {
+  for (const player of players) {
+    if (isOverlap(getBulletBoundingBox(bullet), getPlayerBoundingBox(player))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function isBulletCollidingWithGhosts(bullet, ghosts) {
+  for (const ghost of ghosts) {
+    if (isOverlap(getBulletBoundingBox(bullet), getGhostBoundingBox(ghost))) {
+      return true;
+    }
+  }
+  return false;
+}
 
 export function isChangeDirectionAllowed(ghost: TGhost, collidables: TPoint[]) {
   const surroundedCollidables = collidables.filter(
