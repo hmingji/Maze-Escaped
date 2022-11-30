@@ -15,6 +15,7 @@ import {
   isPlayer,
   isChangeDirectionAllowed,
 } from './geom';
+import { handleGhostEffect } from './ghostController';
 import { getCollidables } from './mapController';
 import { getControlsForPlayer } from './socketController';
 
@@ -108,10 +109,11 @@ function getBulletSpawn(player: TPlayer) {
   }
 }
 
-export function handleGamePhysics(players: TPlayer[], delta: number) {
+export function handlePlayerLogic(players: TPlayer[], delta: number) {
   for (const player of players) {
     handlePlayerMovement(player, delta);
     handlePlayerShoot(player);
     handleBulletEffect(player);
+    handleGhostEffect(player);
   }
 }

@@ -1,6 +1,11 @@
 import { handleBulletEffect } from './bulletController';
 import { GHOST_SPEED } from './constants';
-import { isChangeDirectionAllowed, isCollidingWithMap } from './geom';
+import { getGhosts } from './gameController';
+import {
+  isChangeDirectionAllowed,
+  isCollidingWithGhosts,
+  isCollidingWithMap,
+} from './geom';
 import { getCollidables } from './mapController';
 
 function handleGhostMovement(ghost: TGhost, delta: number) {
@@ -94,6 +99,13 @@ function getRandomDirecton(ghost: TGhost) {
       ? ['Up', 'Down']
       : ['Left', 'Right'];
   return directions[Math.floor(Math.random() * 2)] as Direction;
+}
+
+export function handleGhostEffect(player: TPlayer) {
+  const ghosts = getGhosts();
+  if (isCollidingWithGhosts(player, ghosts)) {
+    player.state = 'Dead';
+  }
 }
 
 export function handleGhostLogic(ghosts: TGhost[], delta: number) {

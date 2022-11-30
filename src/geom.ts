@@ -106,6 +106,15 @@ export const isCollidingWithMap = (character, collidables) => {
   return null;
 };
 
+export function isCollidingWithGhosts(player: TPlayer, ghosts: TGhost[]) {
+  for (const ghost of ghosts) {
+    if (isOverlap(getPlayerBoundingBox(player), getGhostBoundingBox(ghost))) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export const isCollidingWithBullet = (character, bullets) => {
   const characterBoundingBox = isPlayer(character)
     ? getPlayerBoundingBox(character)
