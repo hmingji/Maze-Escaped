@@ -3,7 +3,7 @@ import { handleBulletLogic } from './bulletController';
 import { TICK_RATE } from './constants';
 import { handleGhostLogic } from './ghostController';
 import { loadMap } from './mapController';
-import { canShoot, handleGamePhysics } from './playerController';
+import { canShoot, handlePlayerLogic } from './playerController';
 import {
   emitBulletRemoved,
   emitBullets,
@@ -40,8 +40,8 @@ export function createPlayer(id: number) {
 export function createGhost(id: number) {
   const ghost: TGhost = {
     id,
-    x: 70,
-    y: 70,
+    x: 500,
+    y: 150,
     score: 0,
     color: `#${Math.floor(Math.random() * (0xffffff + 1)).toString(16)}`,
     facing: 'Right',
@@ -100,12 +100,11 @@ function getProcessMs() {
 
 function tick(delta: number) {
   handleGhostLogic(ghosts, delta);
-  handleGamePhysics(players, delta);
+  handlePlayerLogic(players, delta);
   handleBulletLogic(bullets, delta);
   emitPlayers(players);
   emitBullets(bullets);
   emitGhosts(ghosts);
-  //console.log(ghosts);
 }
 
 let lastUpdate = getProcessMs();
