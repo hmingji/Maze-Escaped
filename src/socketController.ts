@@ -55,6 +55,10 @@ export function emitPlayers(players: TPlayer[]) {
           player.state !== lastPlayerState.state ? player.state : undefined,
         facing:
           player.facing !== lastPlayerState.facing ? player.facing : undefined,
+        gunState:
+          player.gunState !== lastPlayerState.gunState
+            ? player.gunState
+            : undefined,
       };
       diff = pickBy(diff, (value) => value !== undefined);
 
@@ -159,7 +163,7 @@ export const startSocketController = (server) => {
     socket.emit('id', newPlayerId);
     socket.emit('p', getPlayers());
     socket.emit('map', getGameMap());
-    spawnGhosts(5);
+    //spawnGhosts(5);
     socket.emit('ghosts', getGhosts());
 
     socket.on('disconnect', () => {

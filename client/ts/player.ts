@@ -89,7 +89,7 @@ export function drawPlayers(ctx: CanvasRenderingContext2D, camera: Camera) {
     ctx.font = `16px Verdana`;
     ctx.textAlign = 'center';
     ctx.fillText(
-      player.name,
+      player.name + ' ' + player.gunState,
       player.x + 15 - camera.cx,
       player.y - 10 - camera.cy
     );

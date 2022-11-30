@@ -3,7 +3,7 @@ import { handleBulletLogic } from './bulletController';
 import { TICK_RATE } from './constants';
 import { handleGhostLogic } from './ghostController';
 import { loadMap } from './mapController';
-import { canShoot, handlePlayerLogic } from './playerController';
+import { canReload, canShoot, handlePlayerLogic } from './playerController';
 import {
   emitBulletRemoved,
   emitBullets,
@@ -17,6 +17,10 @@ export let ghosts: TGhost[] = [];
 
 export const removePlayer = (id: number) => {
   players = players.filter((player) => player.id !== id);
+};
+
+export const getPlayer = (id: number) => {
+  return players.find((item) => item.id === id);
 };
 
 export function createPlayer(id: number) {
@@ -34,6 +38,7 @@ export function createPlayer(id: number) {
   };
   players.push(player);
   canShoot[player.id] = true;
+  canReload[player.id] = true;
   return player;
 }
 

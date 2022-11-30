@@ -7,7 +7,7 @@ import {
   PLAYER_SPEED,
   PLAYER_WIDTH,
 } from './constants';
-import { fireBullet, removeBullet } from './gameController';
+import { fireBullet, getPlayer, removeBullet } from './gameController';
 import {
   isCollidingWithMap,
   isCollidingWithBullet,
@@ -21,6 +21,7 @@ import { getControlsForPlayer } from './socketController';
 
 let nextBulletId = 0;
 export const canShoot: Record<number, boolean> = {};
+export const canReload: Record<number, boolean> = {};
 
 function getNextBulletId() {
   return nextBulletId++;
@@ -68,18 +69,45 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
 
 function handlePlayerShoot(player: TPlayer) {
   const playerControls = getControlsForPlayer(player.id);
-  if (playerControls[CONTROLS.SHOOT] && canShoot[player.id]) {
+  if (
+    playerControls[CONTROLS.SHOOT] &&
+    canShoot[player.id] &&
+    player.bullet > 0
+  ) {
     canShoot[player.id] = false;
     fireBullet(getNextBulletId(), getBulletSpawn(player), player.facing);
+    player.bullet -= 1;
     activateShoot(player.id);
   }
   playerControls[CONTROLS.SHOOT] = false;
+  if (player.gunState === 'Ready' && player.bullet === 0) reloadWeapon(player);
+}
+
+function handlePlayerReload(player: TPlayer) {
+  const playerControls = getControlsForPlayer(player.id);
+  if (playerControls[CONTROLS.RELOAD] && canReload[player.id]) {
+    reloadWeapon(player);
+  }
+  playerControls[CONTROLS.RELOAD] = false;
+}
+
+function reloadWeapon(player: TPlayer) {
+  canReload[player.id] = false;
+  canShoot[player.id] = false;
+  player.gunState = 'Reloading';
+  setTimeout(() => {
+    player.bullet = 3;
+    canReload[player.id] = true;
+    canShoot[player.id] = true;
+    player.gunState = 'Ready';
+  }, 2000);
 }
 
 function activateShoot(playerId: number) {
   if (!canShoot[playerId]) {
     setTimeout(() => {
-      canShoot[playerId] = true;
+      const player = getPlayer(playerId);
+      if (player?.gunState === 'Ready') canShoot[playerId] = true;
     }, 1000);
   }
 }
@@ -112,8 +140,10 @@ function getBulletSpawn(player: TPlayer) {
 export function handlePlayerLogic(players: TPlayer[], delta: number) {
   for (const player of players) {
     handlePlayerMovement(player, delta);
+    handlePlayerReload(player);
     handlePlayerShoot(player);
     handleBulletEffect(player);
     handleGhostEffect(player);
+    //console.log('player reload state', player.gunState);
   }
 }

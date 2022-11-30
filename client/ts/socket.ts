@@ -61,4 +61,8 @@ export function emitControls(activeControls) {
   if (activeControls[CTR_ACTIONS.SHOOT]) {
     socket.emit('shoot', null);
   }
+
+  if (activeControls[CTR_ACTIONS.RELOAD]) {
+    socket.emit('reload', null);
+  }
 }
