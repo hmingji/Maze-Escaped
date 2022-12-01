@@ -48,13 +48,14 @@ function handleBulletMovement(bullet: TBullet, delta: number) {
 
 export function handleBulletLogic(bullets: TBullet[], delta: number) {
   for (const bullet of bullets) {
-    handleBulletMovement(bullet, delta);
     if (
       isBulletCollidingWithMap(bullet, getCollidables()) ||
       isBulletCollidingWithPlayers(bullet, getPlayers()) ||
       isBulletCollidingWithGhosts(bullet, getGhosts())
     ) {
       removeBullet(bullet);
+    } else {
+      handleBulletMovement(bullet, delta);
     }
   }
 }

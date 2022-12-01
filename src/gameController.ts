@@ -1,8 +1,9 @@
 import random from 'random-name';
 import { handleBulletLogic } from './bulletController';
 import { TICK_RATE } from './constants';
+import { handleFlagLogic } from './flagController';
 import { handleGhostLogic } from './ghostController';
-import { loadMap } from './mapController';
+import { getFlag, loadMap } from './mapController';
 import { canReload, canShoot, handlePlayerLogic } from './playerController';
 import {
   emitBulletRemoved,
@@ -14,6 +15,8 @@ import {
 export let players: TPlayer[] = [];
 export let bullets: TBullet[] = [];
 export let ghosts: TGhost[] = [];
+export let flag: TFlag | null = null;
+export let winner: TPlayer | null = null;
 
 export const removePlayer = (id: number) => {
   players = players.filter((player) => player.id !== id);
@@ -22,6 +25,14 @@ export const removePlayer = (id: number) => {
 export const getPlayer = (id: number) => {
   return players.find((item) => item.id === id);
 };
+
+export function setWinner(player: TPlayer) {
+  winner = player;
+}
+
+export function getWinner() {
+  return winner;
+}
 
 export function createPlayer(id: number) {
   const player: TPlayer = {
@@ -107,6 +118,7 @@ function tick(delta: number) {
   handleGhostLogic(ghosts, delta);
   handlePlayerLogic(players, delta);
   handleBulletLogic(bullets, delta);
+  handleFlagLogic(getFlag());
   emitPlayers(players);
   emitBullets(bullets);
   emitGhosts(ghosts);

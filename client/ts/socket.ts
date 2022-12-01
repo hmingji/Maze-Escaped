@@ -38,6 +38,10 @@ socket.on('map', (serverMap: number[][]) => {
   setMap(serverMap);
 });
 
+socket.on('winner', (winner) => {
+  //console.log(winner);
+});
+
 export function getMyPlayerId() {
   return myPlayerId;
 }

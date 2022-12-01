@@ -243,3 +243,10 @@ export function isChangeDirectionAllowed(ghost: TGhost, collidables: TPoint[]) {
     return directions;
   }
 }
+
+export function isPlayerCollidingWithFlag(player: TPlayer, flag: TFlag) {
+  if (isOverlap(getPlayerBoundingBox(player), getMapBoundingBox(flag))) {
+    return true;
+  }
+  return false;
+}

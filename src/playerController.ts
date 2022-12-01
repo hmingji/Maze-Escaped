@@ -69,6 +69,7 @@ function handlePlayerMovement(player: TPlayer, delta: number) {
 
 function handlePlayerShoot(player: TPlayer) {
   const playerControls = getControlsForPlayer(player.id);
+  if (player.state !== 'Normal') return;
   if (
     playerControls[CONTROLS.SHOOT] &&
     canShoot[player.id] &&
@@ -85,6 +86,8 @@ function handlePlayerShoot(player: TPlayer) {
 
 function handlePlayerReload(player: TPlayer) {
   const playerControls = getControlsForPlayer(player.id);
+  if (player.state !== 'Normal') return;
+
   if (playerControls[CONTROLS.RELOAD] && canReload[player.id]) {
     reloadWeapon(player);
   }

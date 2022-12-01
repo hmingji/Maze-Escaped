@@ -42,3 +42,8 @@ type TPoint = {
   x: number;
   y: number;
 };
+
+type TFlag = {
+  x: number;
+  y: number;
+};

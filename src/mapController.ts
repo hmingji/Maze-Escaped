@@ -2,6 +2,7 @@ import { TILE_SIZE } from './constants';
 import { defaultMap } from '../maps/map';
 
 let collidables: TPoint[] = [];
+let flag: TFlag | null = null;
 const maps = {
   default: defaultMap,
 };
@@ -13,11 +14,17 @@ export function loadMap(mapName) {
   collidables = [];
   for (let row = 0; row < map.length; row++) {
     for (let col = 0; col < map[row].length; col++) {
-      if (map[row][col] !== 0) {
+      if (map[row][col] === 1) {
         collidables.push({
           x: col * TILE_SIZE,
           y: row * TILE_SIZE,
         });
+      }
+      if (map[row][col] === 2) {
+        flag = {
+          x: col * TILE_SIZE,
+          y: row * TILE_SIZE,
+        } as TFlag;
       }
     }
   }
@@ -38,3 +45,4 @@ export const getGhostSpawn = () => GHOST_SPAWN;
 
 export const getCollidables = () => collidables;
 export const getGameMap = () => gameMap;
+export const getFlag = () => flag;

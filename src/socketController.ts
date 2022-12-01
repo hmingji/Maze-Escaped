@@ -104,6 +104,10 @@ export function emitBulletRemoved(bullet: TBullet) {
   io.emit('bulletRemoved', bullet);
 }
 
+export function emitWinner(winner: TPlayer) {
+  io.emit('winner', winner);
+}
+
 export function emitGhosts(ghosts: TGhost[]) {
   const diffs: any[] = [];
   for (let ghost of ghosts) {
@@ -163,7 +167,7 @@ export const startSocketController = (server) => {
     socket.emit('id', newPlayerId);
     socket.emit('p', getPlayers());
     socket.emit('map', getGameMap());
-    //spawnGhosts(5);
+    //spawnGhosts(1);
     socket.emit('ghosts', getGhosts());
 
     socket.on('disconnect', () => {
