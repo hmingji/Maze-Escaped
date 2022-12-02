@@ -1,5 +1,6 @@
 import { handleBulletEffect } from './bulletController';
 import {
+  BULLET_SIZE,
   BULLET_SPEED,
   CONTROLS,
   GHOST_SPEED,
@@ -124,13 +125,13 @@ function getBulletSpawn(player: TPlayer) {
       } as TPoint;
     case 'Left':
       return {
-        x: player.x - PLAYER_WIDTH,
+        x: player.x - PLAYER_WIDTH - BULLET_SIZE,
         y: player.y + PLAYER_HEIGHT / 4,
       } as TPoint;
     case 'Up':
       return {
         x: player.x + PLAYER_WIDTH / 4,
-        y: player.y - PLAYER_HEIGHT,
+        y: player.y - BULLET_SIZE,
       } as TPoint;
     case 'Down':
       return {

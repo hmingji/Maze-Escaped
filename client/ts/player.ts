@@ -82,10 +82,16 @@ function drawPlayer(
   );
 }
 
+const playerNameColorMap = {
+  Normal: '#00FF00',
+  Stunned: '#FFBF00',
+  Dead: '#C1C1C1',
+};
+
 export function drawPlayers(ctx: CanvasRenderingContext2D, camera: Camera) {
   for (let player of players) {
     drawPlayer(ctx, player, camera);
-    ctx.fillStyle = '#00FF00';
+    ctx.fillStyle = playerNameColorMap[player.state];
     ctx.font = `16px Verdana`;
     ctx.textAlign = 'center';
     ctx.fillText(
