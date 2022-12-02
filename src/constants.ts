@@ -10,6 +10,8 @@ export const GHOST_SIZE = 50;
 export const TILE_SIZE = 60;
 export const BULLET_SIZE = 24;
 export const DIRECTION_DETECT_RANGE = 50;
+export const PLAYERS_NEEDED = 1;
+export const GAME_LENGTH: number = 1000 * 30 * 3; // 1 min 30 seconds
 
 export enum CONTROLS {
   UP = 'up',

@@ -1,22 +1,30 @@
 import random from 'random-name';
 import { handleBulletLogic } from './bulletController';
 import { TICK_RATE } from './constants';
-import { handleFlagLogic } from './flagController';
 import { handleGhostLogic } from './ghostController';
 import { getFlag, loadMap } from './mapController';
 import { canReload, canShoot, handlePlayerLogic } from './playerController';
 import {
   emitBulletRemoved,
   emitBullets,
+  emitGameState,
   emitGhosts,
   emitPlayers,
 } from './socketController';
+import { handleInGameState } from './states/inGameState';
+import { handlePreStartState } from './states/preStartState';
+
+export enum GAME_STATE {
+  PreStartGame = 'PRE_START_GAME',
+  InGame = 'IN_GAME',
+}
 
 export let players: TPlayer[] = [];
 export let bullets: TBullet[] = [];
 export let ghosts: TGhost[] = [];
 export let flag: TFlag | null = null;
 export let winner: TPlayer | null = null;
+let gameState: GAME_STATE = GAME_STATE.PreStartGame;
 
 export const removePlayer = (id: number) => {
   players = players.filter((player) => player.id !== id);
@@ -26,7 +34,7 @@ export const getPlayer = (id: number) => {
   return players.find((item) => item.id === id);
 };
 
-export function setWinner(player: TPlayer) {
+export function setWinner(player: TPlayer | null) {
   winner = player;
 }
 
@@ -92,6 +100,14 @@ export function getPlayers() {
   return players;
 }
 
+export function respawnPlayers() {
+  for (const player of players) {
+    const spawnPoint = { x: 70, y: 70 };
+    player.x = spawnPoint.x;
+    player.y = spawnPoint.y;
+  }
+}
+
 export function getBullets() {
   return bullets;
 }
@@ -109,6 +125,15 @@ export function removeBullet(bullet: TBullet) {
   emitBulletRemoved(bullet);
 }
 
+export function getGameState() {
+  return gameState;
+}
+
+export function setGameState(newState: GAME_STATE) {
+  gameState = newState;
+  emitGameState(gameState);
+}
+
 function getProcessMs() {
   const hrTime = process.hrtime();
   return (hrTime[0] * 1e9 + hrTime[1]) / 1e6;
@@ -118,7 +143,13 @@ function tick(delta: number) {
   handleGhostLogic(ghosts, delta);
   handlePlayerLogic(players, delta);
   handleBulletLogic(bullets, delta);
-  handleFlagLogic(getFlag());
+
+  if (gameState === GAME_STATE.PreStartGame) {
+    handlePreStartState(players);
+  } else if (gameState === GAME_STATE.InGame) {
+    handleInGameState(players, getFlag()!);
+  }
+
   emitPlayers(players);
   emitBullets(bullets);
   emitGhosts(ghosts);

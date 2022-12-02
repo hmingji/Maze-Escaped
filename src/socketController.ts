@@ -7,9 +7,12 @@ import {
   spawnGhosts,
   getGhosts,
   clearGhosts,
+  GAME_STATE,
+  getGameState,
 } from './gameController';
 import { isEmpty, pickBy, identity } from 'lodash';
 import { getGameMap } from './mapController';
+import { endGame } from './states/inGameState';
 
 let io: Server;
 let nextPlayerId = 0;
@@ -104,8 +107,16 @@ export function emitBulletRemoved(bullet: TBullet) {
   io.emit('bulletRemoved', bullet);
 }
 
-export function emitWinner(winner: TPlayer) {
+export function emitWinner(winner: TPlayer | null) {
   io.emit('winner', winner);
+}
+
+export function emitGameState(gameState: GAME_STATE) {
+  io.emit('gameState', gameState);
+}
+
+export function emitTimeLeft(timeLeft: number) {
+  io.emit('timeLeft', timeLeft);
 }
 
 export function emitGhosts(ghosts: TGhost[]) {
@@ -167,7 +178,6 @@ export const startSocketController = (server) => {
     socket.emit('id', newPlayerId);
     socket.emit('p', getPlayers());
     socket.emit('map', getGameMap());
-    //spawnGhosts(1);
     socket.emit('ghosts', getGhosts());
 
     socket.on('disconnect', () => {
@@ -179,7 +189,8 @@ export const startSocketController = (server) => {
       removePlayer(playerId);
 
       io.emit('playerLeft', playerId);
-      if (getPlayers().length === 0) clearGhosts();
+      if (getPlayers().length === 0 && getGameState() === GAME_STATE.InGame)
+        endGame(null);
     });
 
     socket.on('shoot', () => {
