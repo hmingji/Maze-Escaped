@@ -17,6 +17,7 @@ import { handlePreStartState } from './states/preStartState';
 export enum GAME_STATE {
   PreStartGame = 'PRE_START_GAME',
   InGame = 'IN_GAME',
+  EndGame = 'END_GAME',
 }
 
 export let players: TPlayer[] = [];
@@ -46,10 +47,8 @@ export function createPlayer(id: number) {
   const player: TPlayer = {
     x: 70,
     y: 70,
-    score: 0,
     name: random.first(),
     id,
-    color: `#${Math.floor(Math.random() * (0xffffff + 1)).toString(16)}`,
     facing: 'Right',
     bullet: 3,
     gunState: 'Ready',
@@ -66,8 +65,6 @@ export function createGhost(id: number) {
     id,
     x: 500,
     y: 150,
-    score: 0,
-    color: `#${Math.floor(Math.random() * (0xffffff + 1)).toString(16)}`,
     facing: 'Right',
     state: 'Normal',
   };
@@ -105,6 +102,10 @@ export function respawnPlayers() {
     const spawnPoint = { x: 70, y: 70 };
     player.x = spawnPoint.x;
     player.y = spawnPoint.y;
+    player.state = 'Normal';
+    player.bullet = 3;
+    player.gunState = 'Ready';
+    player.facing = 'Right';
   }
 }
 
@@ -140,19 +141,20 @@ function getProcessMs() {
 }
 
 function tick(delta: number) {
+  if (gameState === GAME_STATE.EndGame) return;
   handleGhostLogic(ghosts, delta);
   handlePlayerLogic(players, delta);
   handleBulletLogic(bullets, delta);
+
+  emitPlayers(players);
+  emitBullets(bullets);
+  emitGhosts(ghosts);
 
   if (gameState === GAME_STATE.PreStartGame) {
     handlePreStartState(players);
   } else if (gameState === GAME_STATE.InGame) {
     handleInGameState(players, getFlag()!);
   }
-
-  emitPlayers(players);
-  emitBullets(bullets);
-  emitGhosts(ghosts);
 }
 
 let lastUpdate = getProcessMs();

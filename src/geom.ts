@@ -14,16 +14,6 @@ type TRectangle = {
   height: number;
 };
 
-type TDisplacement = {
-  x: number;
-  y: number;
-};
-
-const offset: TDisplacement = {
-  x: 0,
-  y: 0,
-};
-
 export const isOverlap = (rect1: TRectangle, rect2: TRectangle) => {
   return (
     rect1.x < rect2.x + rect2.width &&
@@ -51,8 +41,6 @@ const getOffset = (
       return 0;
   }
 };
-
-//export const getOffset = () => offset;
 
 const getBoundingRectangleFactory =
   (width: number, height: number) => (entity) => {
@@ -102,7 +90,7 @@ export const isCollidingWithMap = (character, collidables) => {
       );
     }
   }
-  //console.log('in isColliding function, facing: ', character.facing);
+
   return null;
 };
 

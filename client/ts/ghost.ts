@@ -26,7 +26,6 @@ function drawGhost(
   ghost: TGhost,
   camera: Camera
 ) {
-  console.log(ghost.x, ghost.y);
   ctx.drawImage(
     ghost.state === 'Normal' ? ghostImageMap[ghost.facing] : ghostImageD,
     0,
@@ -46,7 +45,6 @@ export function getGhosts() {
 
 export function drawGhosts(ctx: CanvasRenderingContext2D, camera: Camera) {
   for (let ghost of ghosts) {
-    //console.log(ghost);
     drawGhost(ctx, ghost, camera);
   }
 }

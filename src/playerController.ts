@@ -1,21 +1,13 @@
 import { handleBulletEffect } from './bulletController';
 import {
   BULLET_SIZE,
-  BULLET_SPEED,
   CONTROLS,
-  GHOST_SPEED,
   PLAYER_HEIGHT,
   PLAYER_SPEED,
   PLAYER_WIDTH,
 } from './constants';
-import { fireBullet, getPlayer, removeBullet } from './gameController';
-import {
-  isCollidingWithMap,
-  isCollidingWithBullet,
-  isBulletColliding,
-  isPlayer,
-  isChangeDirectionAllowed,
-} from './geom';
+import { fireBullet, getPlayer } from './gameController';
+import { isCollidingWithMap } from './geom';
 import { handleGhostEffect } from './ghostController';
 import { getCollidables } from './mapController';
 import { getControlsForPlayer } from './socketController';
@@ -148,6 +140,5 @@ export function handlePlayerLogic(players: TPlayer[], delta: number) {
     handlePlayerShoot(player);
     handleBulletEffect(player);
     handleGhostEffect(player);
-    //console.log('player reload state', player.gunState);
   }
 }

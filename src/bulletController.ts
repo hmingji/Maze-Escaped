@@ -6,7 +6,6 @@ import {
   removeBullet,
 } from './gameController';
 import {
-  isBulletColliding,
   isBulletCollidingWithGhosts,
   isBulletCollidingWithMap,
   isBulletCollidingWithPlayers,

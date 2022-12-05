@@ -31,13 +31,13 @@ export function loadMap(mapName) {
 }
 
 const PLAYER_SPAWN: TPoint = {
-  x: 50,
-  y: 50,
+  x: 70,
+  y: 70,
 };
 
 const GHOST_SPAWN: TPoint = {
   x: 500,
-  y: 500,
+  y: 150,
 };
 
 export const getPlayerSpawn = () => PLAYER_SPAWN;

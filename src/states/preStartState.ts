@@ -1,6 +1,5 @@
 import { PLAYERS_NEEDED } from '../constants';
-import { GAME_STATE, setGameState, setWinner } from '../gameController';
-import { emitWinner } from '../socketController';
+import { GAME_STATE, setGameState } from '../gameController';
 import { startGame } from './inGameState';
 
 export function handlePreStartState(players: TPlayer[]) {
@@ -10,8 +9,6 @@ export function handlePreStartState(players: TPlayer[]) {
   }
 }
 
-export function goToPreStartState(winner: TPlayer | null) {
+export function goToPreStartState() {
   setGameState(GAME_STATE.PreStartGame);
-  setWinner(winner);
-  emitWinner(winner);
 }

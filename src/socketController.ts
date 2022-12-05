@@ -4,13 +4,11 @@ import {
   createPlayer,
   getPlayers,
   removePlayer,
-  spawnGhosts,
   getGhosts,
-  clearGhosts,
   GAME_STATE,
   getGameState,
 } from './gameController';
-import { isEmpty, pickBy, identity } from 'lodash';
+import { isEmpty, pickBy } from 'lodash';
 import { getGameMap } from './mapController';
 import { endGame } from './states/inGameState';
 
@@ -58,6 +56,8 @@ export function emitPlayers(players: TPlayer[]) {
           player.state !== lastPlayerState.state ? player.state : undefined,
         facing:
           player.facing !== lastPlayerState.facing ? player.facing : undefined,
+        bullet:
+          player.bullet !== lastPlayerState.bullet ? player.bullet : undefined,
         gunState:
           player.gunState !== lastPlayerState.gunState
             ? player.gunState

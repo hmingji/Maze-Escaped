@@ -83,19 +83,29 @@ function drawPlayer(
 }
 
 const playerNameColorMap = {
+  Normal: '#000000',
+  Stunned: '#000000',
+  Dead: '#C1C1C1',
+};
+
+const myPlayerNameColorMap = {
   Normal: '#00FF00',
   Stunned: '#FFBF00',
   Dead: '#C1C1C1',
 };
 
 export function drawPlayers(ctx: CanvasRenderingContext2D, camera: Camera) {
+  const myPlayerId = getMyPlayerId();
   for (let player of players) {
     drawPlayer(ctx, player, camera);
-    ctx.fillStyle = playerNameColorMap[player.state];
+    ctx.fillStyle =
+      player.id === myPlayerId
+        ? myPlayerNameColorMap[player.state]
+        : playerNameColorMap[player.state];
     ctx.font = `16px Verdana`;
     ctx.textAlign = 'center';
     ctx.fillText(
-      player.name + ' ' + player.gunState,
+      player.name,
       player.x + 15 - camera.cx,
       player.y - 10 - camera.cy
     );
@@ -106,7 +116,7 @@ export function getMyPlayer() {
   return players.find((p) => p.id === getMyPlayerId());
 }
 
-export function getMyPlayers() {
+export function getPlayers() {
   return players;
 }
 

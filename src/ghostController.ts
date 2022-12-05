@@ -10,13 +10,13 @@ import { getCollidables } from './mapController';
 
 function handleGhostMovement(ghost: TGhost, delta: number) {
   const speed = GHOST_SPEED;
-  //console.log('in handle movement function, facing: ', ghost.facing);
+
   if (ghost.state !== 'Normal') return;
 
   if (ghost.facing === 'Right') {
     ghost.x += Math.trunc(speed * delta);
     const offset = isCollidingWithMap(ghost, getCollidables());
-    //console.log('ghost offset: ', offset);
+
     if (offset) {
       ghost.x -= offset;
       ghost.facing = getRandomDirecton(ghost);
@@ -36,7 +36,7 @@ function handleGhostMovement(ghost: TGhost, delta: number) {
   } else if (ghost.facing === 'Left') {
     ghost.x -= Math.trunc(speed * delta);
     const offset = isCollidingWithMap(ghost, getCollidables());
-    //console.log('ghost offset: ', offset);
+
     if (offset) {
       ghost.x += offset;
       ghost.facing = getRandomDirecton(ghost);
@@ -55,7 +55,7 @@ function handleGhostMovement(ghost: TGhost, delta: number) {
   } else if (ghost.facing === 'Up') {
     ghost.y -= Math.trunc(speed * delta);
     const offset = isCollidingWithMap(ghost, getCollidables());
-    //console.log('ghost offset: ', offset);
+
     if (offset) {
       ghost.y += offset;
       ghost.facing = getRandomDirecton(ghost);
@@ -74,7 +74,7 @@ function handleGhostMovement(ghost: TGhost, delta: number) {
   } else if (ghost.facing === 'Down') {
     ghost.y += Math.trunc(speed * delta);
     const offset = isCollidingWithMap(ghost, getCollidables());
-    //console.log('ghost offset: ', offset);
+
     if (offset) {
       ghost.y -= offset;
       ghost.facing = getRandomDirecton(ghost);

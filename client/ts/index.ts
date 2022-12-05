@@ -5,6 +5,7 @@ import { ctx, setupCanvas } from './canvas';
 import { INTERPOLATION_RATE } from './constants';
 import { activeControls, defaultKeymap, setKeymap } from './controls';
 import { drawGhosts, updateGhosts } from './ghost';
+import { drawHud } from './hud';
 import { drawMap } from './map';
 import { drawPlayers, updatePlayers } from './player';
 //import './socket';
@@ -23,6 +24,7 @@ function draw() {
   drawPlayers(ctx, camera);
   drawGhosts(ctx, camera);
   drawBullets(ctx, camera);
+  drawHud(ctx);
 }
 
 function loop(timestamp) {
