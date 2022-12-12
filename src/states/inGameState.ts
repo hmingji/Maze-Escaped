@@ -17,7 +17,7 @@ export function startGame() {
   timeLeft = GAME_LENGTH / 1000;
   emitTimeLeft(timeLeft);
   respawnPlayers();
-  spawnGhosts(1);
+  spawnGhosts(5);
   setGameState(GAME_STATE.InGame);
 
   const setTimeLeft = () => {
