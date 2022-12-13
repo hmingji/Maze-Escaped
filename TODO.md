@@ -1,2 +1,5 @@
-- to add eslint
-- add express and host the static file
+- add sound effect, eg when player dead or reach the flag
+- add more different spawn location
+- [refactor] remove magic number
+- ghost become no damage when stunned
+- add more special skill
